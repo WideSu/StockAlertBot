@@ -180,10 +180,11 @@ class StockWatcherBot:
 bot = StockWatcherBot()
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
     """Start command handler"""
-    welcome_message = """
+    welcome_message = f"""
 📈 **Welcome to Stock Watcher Bot!**
-
+Hello {update.effective_user.first_name}!👋
 I'll help you monitor your favorite stocks and track their performance against the 45-week moving average.
 
 **Available Commands:**
