@@ -7,7 +7,6 @@ from collections import defaultdict
 ALPHA_VANTAGE_API_KEY = 'XXX'
 BOT_TOKEN = 'XXX'
 TELEGRAM_CHAT_ID = 'XXX'
-LAST_UPDATE_ID = None
 import logging
 import json
 import os
