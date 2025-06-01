@@ -1,4 +1,4 @@
-# Telegram Stock Watcher Bot Setup
+# Telegram Stock Watcher Bot 📈
 
 ## Requirements
 
