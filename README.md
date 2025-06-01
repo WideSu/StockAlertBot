@@ -27,7 +27,7 @@ asyncio
 3. Follow the prompts to create your bot:
    - Choose a name (e.g., "Stock Watcher Bot")
    - Choose a username (e.g., "mystockwatcher_bot")
-4. BotFather will give you a bot token that looks like: `123456789:ABCdefGHIjklMNOpqrsTUVwxyz`
+4. BotFather will give you a bot token that looks like: `123526789:ABCdefGHIjklMNOpqrsTUVwxyz`
 5. Copy this token and replace `YOUR_BOT_TOKEN_HERE` in the code
 
 ### 3. Configure API Keys
@@ -53,7 +53,7 @@ You can use these commands:
 /remove <symbol> - Remove stock from your watchlist
 /list - Show your watchlist
 /price <symbol> - Show current price for a stock
-/check - Check all watchlist stocks against 45-week MA condition
+/check - Check all watchlist stocks against 52-week MA condition
 
 Start monitoring your favorite stocks today! 📈
 ```
@@ -70,7 +70,7 @@ add - Add stock to watchlist
 remove - Remove stock from watchlist
 list - Show your watchlist
 price - Get stock price info
-check - Check watchlist against 45-week MA
+check - Check watchlist against 52-week MA
 ```
 
 **Set About Text:**
@@ -79,7 +79,7 @@ check - Check watchlist against 45-week MA
 ```
 Then paste:
 ```
-🤖 Your intelligent stock monitoring assistant. Track your favorite stocks and monitor their performance against the 45-week moving average for technical analysis.
+🤖 Your intelligent stock monitoring assistant. Track your favorite stocks and monitor their performance against the 52-week moving average for technical analysis.
 ```
 
 ### 5. Install Dependencies
@@ -102,15 +102,15 @@ python stock_watcher_bot.py
 - **`/add <symbol>`** - Add stocks to personal watchlist
 - **`/remove <symbol>`** - Remove stocks from watchlist
 - **`/list`** - Display current watchlist with action buttons
-- **`/price <symbol>`** - Get current price and 45-week MA analysis
-- **`/check`** - Analyze all watchlist stocks against 45-week MA
+- **`/price <symbol>`** - Get current price and 52-week MA analysis
+- **`/check`** - Analyze all watchlist stocks against 52-week MA
 - **`/help`** - Show detailed help message
 
 ### 🎯 Key Features
 
 1. **Personal Watchlists** - Each user has their own watchlist stored persistently
 2. **Real Stock Data** - Uses Alpha Vantage API for live stock prices and historical data
-3. **45-Week Moving Average** - Technical analysis comparing current price to 45-week MA
+3. **52-Week Moving Average** - Technical analysis comparing current price to 52-week MA
 4. **Interactive Buttons** - Inline keyboards for better user experience
 5. **Multi-stock Support** - Add/remove multiple stocks in one command
 6. **Error Handling** - Validates stock symbols and handles API errors/rate limits
@@ -136,8 +136,8 @@ python stock_watcher_bot.py
 - Consider premium plans for higher usage
 
 **Moving Average Period:**
-- Uses weekly data for more accurate 45-week calculations
-- Requires minimum 45 weeks of historical data
+- Uses weekly data for more accurate 52-week calculations
+- Requires minimum 52 weeks of historical data
 - Falls back gracefully when insufficient data available
 
 **Watchlist Limits:**
@@ -157,17 +157,17 @@ Bot: ✅ Added to watchlist:
 
 User: /price TSLA
 Bot: 📈 TSLA - TSLA
-     💰 Current Price: $245.30
-     📊 45-Week MA: $260.75
-     📈 Status: Below 45-Week MA
+     💰 Current Price: $252.30
+     📊 52-Week MA: $260.75
+     📈 Status: Below 52-Week MA
      📊 Difference: -5.93%
 
 User: /check
-Bot: 📊 45-Week MA Analysis (3 stocks)
-     ✅ Above 45-Week MA:
+Bot: 📊 52-Week MA Analysis (3 stocks)
+     ✅ Above 52-Week MA:
      📈 AAPL: $175.50 (+6.26%)
      📈 MSFT: $385.90 (+4.16%)
-     ❌ Below 45-Week MA:
+     ❌ Below 52-Week MA:
      📉 GOOGL: $2750.80 (-2.64%)
 ```
 

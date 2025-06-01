@@ -80,7 +80,7 @@ class StockWatcherBot:
         return False
     
     def get_stock_price(self, symbol: str) -> Dict:
-        """Get current stock price and 45-week MA using Alpha Vantage API"""
+        """Get current stock price and 52-week MA using Alpha Vantage API"""
         try:
             # Get current quote
             quote_url = f"https://www.alphavantage.co/query"
@@ -110,7 +110,7 @@ class StockWatcherBot:
             current_price = float(quote['05. price'])
             company_name = symbol  # Alpha Vantage doesn't provide company name in quote
             
-            # Get historical data for 45-week MA calculation
+            # Get historical data for 52-week MA calculation
             # Using weekly data to reduce API calls
             hist_url = f"https://www.alphavantage.co/query"
             hist_params = {
@@ -129,36 +129,36 @@ class StockWatcherBot:
                     'symbol': symbol,
                     'company_name': company_name,
                     'current_price': round(current_price, 2),
-                    'ma_45_week': None,
+                    'ma_52_week': None,
                     'above_ma': None,
                     'change_percent': None
                 }
             
-            # Calculate 45-week moving average
+            # Calculate 52-week moving average
             weekly_data = hist_data['Weekly Time Series']
             dates = sorted(weekly_data.keys(), reverse=True)  # Most recent first
             
-            if len(dates) < 45:
+            if len(dates) < 52:
                 logger.warning(f"Not enough historical data for {symbol} (only {len(dates)} weeks)")
-                ma_45_week = None
+                ma_52_week = None
                 above_ma = None
                 change_percent = None
             else:
-                # Get closing prices for last 45 weeks
+                # Get closing prices for last 52 weeks
                 closing_prices = []
-                for date in dates[:45]:
+                for date in dates[:52]:
                     closing_prices.append(float(weekly_data[date]['4. close']))
                 
-                ma_45_week = sum(closing_prices) / len(closing_prices)
-                above_ma = current_price > ma_45_week
-                change_percent = round(((current_price - ma_45_week) / ma_45_week) * 100, 2)
-                ma_45_week = round(ma_45_week, 2)
+                ma_52_week = sum(closing_prices) / len(closing_prices)
+                above_ma = current_price > ma_52_week
+                change_percent = round(((current_price - ma_52_week) / ma_52_week) * 100, 2)
+                ma_52_week = round(ma_52_week, 2)
             
             return {
                 'symbol': symbol,
                 'company_name': company_name,
                 'current_price': round(current_price, 2),
-                'ma_45_week': ma_45_week,
+                'ma_52_week': ma_52_week,
                 'above_ma': above_ma,
                 'change_percent': change_percent
             }
@@ -185,14 +185,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     welcome_message = f"""
 📈 **Welcome to Stock Watcher Bot!**
 Hello {update.effective_user.first_name}!👋
-I'll help you monitor your favorite stocks and track their performance against the 45-week moving average.
+I'll help you monitor your favorite stocks and track their performance against the 52-week moving average.
 
 **Available Commands:**
 /add <symbol> - Add stock to your watchlist
 /remove <symbol> - Remove stock from your watchlist
 /list - Show your watchlist
 /price <symbol> - Show current price for a stock
-/check - Check all watchlist stocks against 45-week MA
+/check - Check all watchlist stocks against 52-week MA
 /help - Show this help message
 
 **Example:**
@@ -225,7 +225,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 /list - Show your current watchlist
 
 **Price Information:**
-/price <symbol> - Get current price and 45-week MA info
+/price <symbol> - Get current price and 52-week MA info
 /check - Analyze all your watchlist stocks
 
 **Other:**
@@ -234,7 +234,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 **Tips:**
 • Use official stock symbols (e.g., AAPL for Apple)
-• The bot tracks 45-week moving average for technical analysis
+• The bot tracks 52-week moving average for technical analysis
 • You can add multiple stocks to monitor them easily
 
 **Example Usage:**
@@ -382,13 +382,13 @@ async def get_price(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     
     # Determine trend emoji and status
-    if stock_data['ma_45_week'] is not None:
+    if stock_data['ma_52_week'] is not None:
         trend_emoji = "📈" if stock_data['above_ma'] else "📉"
-        status = "Above 45-Week MA" if stock_data['above_ma'] else "Below 45-Week MA"
-        ma_text = f"📊 **45-Week MA:** ${stock_data['ma_45_week']}\n📈 **Status:** {status}\n📊 **Difference:** {stock_data['change_percent']:+.2f}%"
+        status = "Above 52-Week MA" if stock_data['above_ma'] else "Below 52-Week MA"
+        ma_text = f"📊 **52-Week MA:** ${stock_data['ma_52_week']}\n📈 **Status:** {status}\n📊 **Difference:** {stock_data['change_percent']:+.2f}%"
     else:
         trend_emoji = "📊"
-        ma_text = "📊 **45-Week MA:** Data unavailable\n⚠️ **Note:** Insufficient historical data for MA calculation"
+        ma_text = "📊 **52-Week MA:** Data unavailable\n⚠️ **Note:** Insufficient historical data for MA calculation"
     
     response = f"""
 {trend_emoji} **{stock_data['symbol']} - {stock_data['company_name']}**
@@ -413,7 +413,7 @@ async def get_price(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 async def check_watchlist(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Check all stocks in watchlist against 45-week MA"""
+    """Check all stocks in watchlist against 52-week MA"""
     user_id = update.effective_user.id
     watchlist = bot.get_user_watchlist(user_id)
     
@@ -427,7 +427,7 @@ async def check_watchlist(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Send "typing" action for longer operations
     await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
     
-    response = f"📊 **45-Week MA Analysis** ({len(watchlist)} stocks)\n\n"
+    response = f"📊 **52-Week MA Analysis** ({len(watchlist)} stocks)\n\n"
     
     above_ma = []
     below_ma = []
@@ -441,7 +441,7 @@ async def check_watchlist(update: Update, context: ContextTypes.DEFAULT_TYPE):
             continue
         
         # Handle cases where MA data is unavailable
-        if stock_data['ma_45_week'] is None:
+        if stock_data['ma_52_week'] is None:
             errors.append(f"{symbol} (insufficient data)")
             continue
         
@@ -457,10 +457,10 @@ async def check_watchlist(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     # Format results
     if above_ma:
-        response += "✅ **Above 45-Week MA:**\n" + "\n".join(above_ma) + "\n\n"
+        response += "✅ **Above 52-Week MA:**\n" + "\n".join(above_ma) + "\n\n"
     
     if below_ma:
-        response += "❌ **Below 45-Week MA:**\n" + "\n".join(below_ma) + "\n\n"
+        response += "❌ **Below 52-Week MA:**\n" + "\n".join(below_ma) + "\n\n"
     
     if errors:
         response += "⚠️ **Data Unavailable:**\n" + "\n".join([f"• {symbol}" for symbol in errors]) + "\n\n"
